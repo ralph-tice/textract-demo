@@ -63,7 +63,35 @@ def handler(event, context):
     # TODO: logging output instead of prints
     print(f"Analyzing s3://{bucket}/{photo}")
 
-    # Analyze the image in S3:
+    # TODO: Analyze the image in S3:
+    #toplabel = analyzeImage(bucket, photo, model_arn)
+
+    # Note we return an S3 location or an error (rather than a 'yes/no') because it's common for
+    # pre-processing to *enhance* the image (e.g. skew/blur/lighting/cropping corrections) rather than simply
+    # categorizing it - so this interface makes that functionality easier to add.
+    
+    # TODO: bypass rekognition
+    #if toplabel["Name"] in ACCEPTABLE_CLASSES:
+    return {
+        "Bucket": bucket,
+        "Key": photo,
+        "S3Uri": f"s3://{bucket}/{photo}",
+        # TODO: bypass rekognition
+        "TopLabel": { "Name": "good" }, #toplabel,
+        # Since the Step Function is initialized by S3 trigger we don't have that much control over the
+        # initial data structure. Therefore this function (the first in the flow) will also return all
+        # the initial input fields that we want to keep through the execution, and the SFn will fully
+        # overwrite the state with this result rather than just adding it in somewhere:
+        "Input": {
+            "Bucket": bucket,
+            "Key": photo,
+            "S3Uri": f"s3://{bucket}/{photo}"
+        }
+    }
+    #else:
+    #    raise PoorQualityImage(f"Image unacceptable: Labelled as '{toplabel['Name']}'")
+
+def analyzeImage(bucket, photo, model_arn):
     # TODO: Parameterize min confidence?
     minimum_confidence = 50
     try:
@@ -118,24 +146,4 @@ def handler(event, context):
     except StopIteration:
         raise ModelError(f"Model returned {len(labels)} labels, but none in expected list {LABEL_CLASSES}")
 
-    # Note we return an S3 location or an error (rather than a 'yes/no') because it's common for
-    # pre-processing to *enhance* the image (e.g. skew/blur/lighting/cropping corrections) rather than simply
-    # categorizing it - so this interface makes that functionality easier to add.
-    if toplabel["Name"] in ACCEPTABLE_CLASSES:
-        return {
-            "Bucket": bucket,
-            "Key": photo,
-            "S3Uri": f"s3://{bucket}/{photo}",
-            "TopLabel": toplabel,
-            # Since the Step Function is initialized by S3 trigger we don't have that much control over the
-            # initial data structure. Therefore this function (the first in the flow) will also return all
-            # the initial input fields that we want to keep through the execution, and the SFn will fully
-            # overwrite the state with this result rather than just adding it in somewhere:
-            "Input": {
-                "Bucket": bucket,
-                "Key": photo,
-                "S3Uri": f"s3://{bucket}/{photo}"
-            }
-        }
-    else:
-        raise PoorQualityImage(f"Image unacceptable: Labelled as '{toplabel['Name']}'")
+    return toplabel
