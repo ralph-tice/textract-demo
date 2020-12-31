@@ -2,57 +2,69 @@
   <div id="app">
     <div v-if="!signedIn">
       <amplify-authenticator>
-        <amplify-sign-in header-text="End-to-End OCR Demo" slot="sign-in"></amplify-sign-in>
+        <amplify-sign-in
+          header-text="End-to-End OCR Demo"
+          slot="sign-in"
+        ></amplify-sign-in>
       </amplify-authenticator>
     </div>
     <div v-if="signedIn">
       <amplify-sign-out class="signout"></amplify-sign-out>
-      <div>Hello <b>{{user.username}}</b></div>
-      <img alt="Vue logo" src="./assets/logo.png">
+      <div>
+        Hello <b>{{ user.username }}</b>
+      </div>
+      <img alt="Vue logo" src="./assets/logo.png" />
       <h3>Smart OCR demo</h3>
-      <SmartOCR/>
+      <SmartOCR />
     </div>
   </div>
 </template>
 
 <script>
-import { Logger } from 'aws-amplify';
-import SmartOCR from './components/SmartOCR.vue'
-import { Auth } from 'aws-amplify'
-import { AmplifyEventBus } from 'aws-amplify-vue'
+import { Logger } from "aws-amplify";
+import SmartOCR from "./components/SmartOCR.vue";
+import { Auth } from "aws-amplify";
+window.Auth = Auth;
+import { AmplifyEventBus } from "aws-amplify-vue";
 
-const logger = new Logger('App', 'INFO') // INFO, DEBUG, VERBOSE
+const logger = new Logger("App", "DEBUG"); // INFO, DEBUG, VERBOSE
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     SmartOCR
   },
   async beforeCreate() {
     try {
       // for manual browser refreshes while signed in
-      const user = await Auth.currentAuthenticatedUser()
-      this.signedIn = true
-      this.user = user
-      logger.debug('beforeCreate/awaits', this.user.username, this.signedIn)
-      
+      const user = await Auth.currentAuthenticatedUser();
+      this.signedIn = true;
+      this.user = user;
+      logger.debug("beforeCreate/awaits", this.user.username, this.signedIn);
     } catch (err) {
-      this.signedIn = false
+      this.signedIn = false;
     }
-    AmplifyEventBus.$on('authState', info => {
-      logger.debug('authState changed', this.user.username, this.signedIn)
-      if (info === 'signedIn') {
-        this.signedIn = true
-          // delay in fetching Auth.user, so wrap setting properties inside
-          Auth.currentAuthenticatedUser().then((data) => {
-            this.user = data
-            this.signedIn = true
-            logger.debug('authState changed/currentAuthenticatedUser()', this.user.username)
-          });
+    AmplifyEventBus.$on("authState", info => {
+      logger.debug("authState changed", this.user.username, this.signedIn);
+      if (info === "signedIn") {
+        this.signedIn = true;
+        // delay in fetching Auth.user, so wrap setting properties inside
+        Auth.currentAuthenticatedUser().then(data => {
+          this.user = data;
+          this.signedIn = true;
+          logger.debug(
+            "authState changed/currentAuthenticatedUser()",
+            this.user.username
+          );
+        });
       } else {
-        this.user = {}
-        this.signedIn = false
-        logger.debug('authState changed/signing out', this.user.username, this.signedIn)
+        this.user = {};
+        this.signedIn = false;
+        logger.debug(
+          "authState changed/signing out",
+          this.user.username,
+          this.signedIn
+        );
       }
     });
   },
@@ -60,12 +72,12 @@ export default {
     return {
       signedIn: false,
       user: {}
-    }
+    };
   },
-  mounted () {
-    logger.info('mounted')
+  mounted() {
+    logger.info("mounted");
   }
-}
+};
 </script>
 
 <style>

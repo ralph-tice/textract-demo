@@ -1,17 +1,15 @@
 {
-    "projectName": "textractdemo",
-    "version": "3.0",
-    "frontend": "javascript",
-    "javascript": {
-        "framework": "vue",
-        "config": {
-            "SourceDir": "source/webui",
-            "DistributionDir": "source/webui/dist",
-            "BuildCommand": "cd source/webui && npm run build",
-            "StartCommand": "cd source/webui && npm run serve"
-        }
-    },
-    "providers": [
-        "awscloudformation"
-    ]
+  "providers": ["awscloudformation"],
+  "projectName": "textract-demo",
+  "version": "3.0",
+  "frontend": "javascript",
+  "javascript": {
+    "framework": "vue",
+    "config": {
+      "SourceDir": "source/webui",
+      "DistributionDir": "source/webui/dist",
+      "BuildCommand": "cd source/webui && npm.cmd run-script build",
+      "StartCommand": "cd source/webui && npm.cmd run-script serve"
+    }
+  }
 }

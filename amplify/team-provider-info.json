@@ -1,4 +1,29 @@
 {
+    "devw": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-textractdemo-devw-213146-authRole",
+            "UnauthRoleArn": "arn:aws:iam::036089371421:role/amplify-textractdemo-devw-213146-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::036089371421:role/amplify-textractdemo-devw-213146-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "amplify-textractdemo-devw-213146-deployment",
+            "UnauthRoleName": "amplify-textractdemo-devw-213146-unauthRole",
+            "StackName": "amplify-textractdemo-devw-213146",
+            "StackId": "arn:aws:cloudformation:us-west-2:036089371421:stack/amplify-textractdemo-devw-213146/6baaa0d0-4ae6-11eb-9879-02af25e6679f",
+            "AmplifyAppId": "dci3gv2x4gd6i"
+        },
+        "categories": {
+            "auth": {
+                "cognito": {},
+                "authRolePolicies": {}
+            },
+            "hosting": {
+                "amplifyhosting": {
+                    "appId": "dci3gv2x4gd6i",
+                    "type": "manual"
+                }
+            }
+        }
+    },
     "devx": {
         "awscloudformation": {
             "AuthRoleName": "amplify-textractdemo-devx-102446-authRole",
